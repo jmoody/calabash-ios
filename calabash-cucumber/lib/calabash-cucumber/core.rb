@@ -369,12 +369,12 @@ module Calabash
             return File.read(path)
           end
         }
-
         nil
       end
 
       def playback_file_directories (rec_dir)
-        [rec_dir,
+        # rec_dir is either ENV['PLAYBACK_DIR'] or ./playback
+        [File.expand_path(rec_dir),
          "#{Dir.pwd}",
          "#{Dir.pwd}/features",
          "#{Dir.pwd}/features/playback",
@@ -406,6 +406,7 @@ EOF
           os = "ios#{major}"
         end
 
+        # this should probably default to ./features/playback and not to ./playback
         rec_dir = ENV['PLAYBACK_DIR'] || "#{Dir.pwd}/playback"
 
         recording = recording_name_for(recording_name, os, device)
@@ -441,8 +442,9 @@ EOF
           candidates.each { |file| searched_for.concat("    * '#{file}'\n") }
           searched_in = "  in directories =>\n"
           playback_file_directories(rec_dir).each { |dir| searched_in.concat("    * '#{dir}'\n") }
-          screenshot_and_raise "Playback file not found for: '#{recording_name}' =>\n#{searched_for}#{searched_in}"
+          screenshot_and_raise "Playback file not found for: '#{recording_name}'\n#{searched_for}#{searched_in}"
         end
+
         data
       end
 
@@ -466,6 +468,7 @@ EOF
         res['results']
       end
 
+      # not called? -jjm 2013-08-16
       def interpolate(recording, options={})
         data = load_playback_data(recording)
 
