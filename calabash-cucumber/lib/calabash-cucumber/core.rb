@@ -93,6 +93,9 @@ module Calabash
         end
 
         options[:query] = uiquery
+        if  ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
+          puts "touch options: '#{options}"
+        end
         views_touched = do_touch(options)
         unless uiquery.nil?
           screenshot_and_raise "could not find view to touch: '#{uiquery}', args: #{options}" if views_touched.empty?
@@ -350,6 +353,9 @@ module Calabash
 
       def load_recording(recording, rec_dir)
         if File.exists?(recording)
+          if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
+            puts "loading recording at '#{path}'"
+          end
           return File.read(recording)
         end
 
@@ -357,6 +363,9 @@ module Calabash
         directories.each { |dir|
           path = "#{dir}/#{recording}"
           if File.exists?(path)
+            if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
+              puts "loading recording at '#{path}'"
+            end
             return File.read(path)
           end
         }
@@ -365,9 +374,12 @@ module Calabash
       end
 
       def playback_file_directories (rec_dir)
-        [rec_dir, "#{Dir.pwd}", "#{Dir.pwd}/features", "#{DATA_PATH}/resources/"].uniq
+        [rec_dir,
+         "#{Dir.pwd}",
+         "#{Dir.pwd}/features",
+         "#{Dir.pwd}/features/playback",
+         "#{DATA_PATH}/resources/"].uniq
       end
-
 
       def load_playback_data(recording_name, options={})
         os = options["OS"] || ENV["OS"]
@@ -431,7 +443,6 @@ EOF
           playback_file_directories(rec_dir).each { |dir| searched_in.concat("    * '#{dir}'\n") }
           screenshot_and_raise "Playback file not found for: '#{recording_name}' =>\n#{searched_for}#{searched_in}"
         end
-
         data
       end
 
@@ -503,10 +514,21 @@ EOF
           os = "ios#{major}"
         end
 
+
+
         file_name = "#{file_name}_#{os}_#{device}.base64"
         system("/usr/bin/plutil -convert binary1 -o _recording_binary.plist _recording.plist")
         system("openssl base64 -in _recording_binary.plist -out '#{file_name}'")
         system("rm _recording.plist _recording_binary.plist")
+
+        if ENV['PLAYBACK_DIR']
+          dir = ENV['PLAYBACK_DIR']
+          unless Dir.exists?(dir)
+            system("mkdir -p #{dir}")
+          end
+          system("mv #{file_name} #{dir}")
+        end
+
         file_name
       end
 
