@@ -406,7 +406,6 @@ EOF
           os = "ios#{major}"
         end
 
-        # this should probably default to ./features/playback and not to ./playback
         rec_dir = ENV['PLAYBACK_DIR'] || "#{Dir.pwd}/features/playback"
 
         recording = recording_name_for(recording_name, os, device)
@@ -534,6 +533,7 @@ EOF
 
         system("mv #{file_name} #{rec_dir}")
         "#{file_name} ==> '#{rec_dir}/#{file_name}'"
+
       end
 
       def backdoor(sel, arg)
