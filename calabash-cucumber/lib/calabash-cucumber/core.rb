@@ -446,10 +446,10 @@ EOF
           end
         end
         # useful for debugging recordings, but too verbose for release
-        # suggest (yet) another variable CALABASH_DEBUG_PLAYBACK ?
-        #if !data.nil? && ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
-        #  puts "found compatible playback: '#{rec_dir}/#{recording}'"
-        #end
+        # suggest (yet) another variable CALABASH_VERBOSE_PLAYBACK ?
+        if !data.nil? && ENV['CALABASH_VERBOSE_PLAYBACK'] == '1'
+          puts "found compatible playback: '#{rec_dir}/#{recording}'"
+        end
         data
       end
 
