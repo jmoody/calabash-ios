@@ -445,11 +445,6 @@ EOF
             break if !data.nil?
           end
         end
-        # useful for debugging recordings, but too verbose for release
-        # suggest (yet) another variable CALABASH_VERBOSE_PLAYBACK ?
-        if !data.nil? && ENV['CALABASH_VERBOSE_PLAYBACK'] == '1'
-          puts "found compatible playback: '#{rec_dir}/#{recording}'"
-        end
         data
       end
 
