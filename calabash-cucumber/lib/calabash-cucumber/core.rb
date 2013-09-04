@@ -93,9 +93,6 @@ module Calabash
         end
 
         options[:query] = uiquery
-        if  ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
-          puts "touch options: '#{options}"
-        end
         views_touched = do_touch(options)
         unless uiquery.nil?
           screenshot_and_raise "could not find view to touch: '#{uiquery}', args: #{options}" if views_touched.empty?
@@ -401,22 +398,16 @@ module Calabash
           recording_name
         end
       end
-
       def load_recording(recording, rec_dir)
-        if File.exists?(recording)
-          #if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
-          #  puts "loading recording at '#{path}'"
-          #end
-          return File.read(recording)
-        end
-
         directories = playback_file_directories(rec_dir)
         directories.each { |dir|
           path = "#{dir}/#{recording}"
           if File.exists?(path)
-            if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
-              puts "loading recording at '#{path}'"
-            end
+            # useful for debugging recordings, but too verbose for release
+            # suggest (yet) another variable CALABASH_DEBUG_PLAYBACK ?
+            #if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
+            #  puts "found compatible playback: '#{path}'"
+            #end
             return File.read(path)
           end
         }
