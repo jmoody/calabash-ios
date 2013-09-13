@@ -14,6 +14,15 @@ module Calabash
           :numbers_and_punctuation_alternate => "numbers-and-punctuation-alternate"
       }
 
+
+      IOS7_SUPPORTED_CHARS = {
+          'Dictation' => nil,
+          'Shift' => nil,
+          'Delete' => '\b',
+          'International' => nil,
+          'More' => nil,
+          'Return' => '\n'
+      }
       #Possible values
       # 'Dictation'
       # 'Shift'
@@ -23,17 +32,32 @@ module Calabash
       # 'Return'
       def keyboard_enter_char(chr, should_screenshot=true)
         #map(nil, :keyboard, load_playback_data("touch_done"), chr)
-        res = http({:method => :post, :path => 'keyboard'},
-                   {:key => chr, :events => load_playback_data("touch_done")})
-        res = JSON.parse(res)
-        if res['outcome'] != 'SUCCESS'
-          msg = "Keyboard enter failed failed because: #{res['reason']}\n#{res['details']}"
-          if should_screenshot
-            screenshot_and_raise msg
+        if ios7?
+          if chr.length == 1
+            uia_type_string chr
           else
-            raise msg
+            code = IOS7_SUPPORTED_CHARS[chr]
+            if code
+              uia_type_string code
+            else
+              raise "Char #{chr} is not yet supported in iOS7"
+            end
+          end
+          res = {'results' => []}
+        else
+          res = http({:method => :post, :path => 'keyboard'},
+                     {:key => chr, :events => load_playback_data("touch_done")})
+          res = JSON.parse(res)
+          if res['outcome'] != 'SUCCESS'
+            msg = "Keyboard enter failed failed because: #{res['reason']}\n#{res['details']}"
+            if should_screenshot
+              screenshot_and_raise msg
+            else
+              raise msg
+            end
           end
         end
+
         if ENV['POST_ENTER_KEYBOARD']
           w = ENV['POST_ENTER_KEYBOARD'].to_f
           if w > 0
@@ -44,7 +68,12 @@ module Calabash
       end
 
       def done
-        keyboard_enter_char "Return"
+        if ios7?
+          uia_type_string '\n'
+        else
+          keyboard_enter_char "Return"
+        end
+
       end
 
 
@@ -93,18 +122,20 @@ module Calabash
       end
 
       def keyboard_enter_text(text)
-        # check for iOS 7 - ATM this will send the app into an infinite loop
-        if ENV['OS']=='ios7' || @calabash_launcher && @calabash_launcher.ios_major_version == "7"
-          pending "'keyboard_enter_text' is not available for iOS 7 (yet)"
-        end
         fail("No visible keyboard") if element_does_not_exist("view:'UIKBKeyplaneView'")
-        text.each_char do |ch|
-          begin
-            keyboard_enter_char(ch, false)
-          rescue
-            search_keyplanes_and_enter_char(ch)
+        if ios7?
+          uia_type_string(text)
+        else
+          text.each_char do |ch|
+            begin
+              keyboard_enter_char(ch, false)
+            rescue
+              search_keyplanes_and_enter_char(ch)
+            end
           end
         end
+
+
       end
 
 
