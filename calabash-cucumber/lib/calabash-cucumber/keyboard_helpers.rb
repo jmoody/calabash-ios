@@ -134,8 +134,7 @@ module Calabash
             end
           end
         end
-
-
+        text
       end
 
 
