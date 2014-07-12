@@ -4,13 +4,11 @@
 #                                      #
 #   When running calabash-ios tests at #
 #   www.xamarin.com/test-cloud         #
-#   this file will be overwritten by   #
-#   a file which automates             #
-#   app launch on devices.             #
-#                                      #
-#   Don't rely on this file being      #
-#   present when running at            #
-#   Xamarin Test Cloud                 #
+#   the  methods invoked by            #
+#   CalabashLauncher are overriden.    #
+#   It will automatically ensure       #
+#   running on device, installing apps #
+#   etc.                               #
 #                                      #
 ########################################
 
@@ -43,6 +41,6 @@ end
 at_exit do
   launcher = Calabash::Cucumber::Launcher.new
   if launcher.simulator_target?
-    Calabash::Cucumber::SimulatorHelper.stop unless launcher.calabash_no_stop?
+    launcher.simulator_launcher.stop unless launcher.calabash_no_stop?
   end
 end

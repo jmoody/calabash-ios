@@ -2,11 +2,14 @@ require 'calabash-cucumber/core'
 require 'calabash-cucumber/tests_helpers'
 require 'calabash-cucumber/playback_helpers'
 require 'calabash-cucumber/environment_helpers'
+require 'calabash-cucumber/utils/logging'
 
 module Calabash
   module Cucumber
     module KeyboardHelpers
+
       include Calabash::Cucumber::TestsHelpers
+      include Calabash::Cucumber::Logging
 
       KEYPLANE_NAMES = {
           :small_letters => 'small-letters',
@@ -740,8 +743,8 @@ module Calabash
       # the first responder will be the +UITextField+ or +UITextView+ instance
       # that is associated with the visible keyboard.
       #
-      # returns +nil+ if there no +textField+ or +testView+ is found to be
-      # the first responder.  it is extremely unlikely that this will happen.
+      # returns +empty string+ if no +textField+ or +textView+ elements are found to be
+      # the first responder.
       #
       # raises an exception if there is no visible keyboard
       def _text_from_first_responder
@@ -752,7 +755,7 @@ module Calabash
           return res.first unless res.empty?
         end
         #noinspection RubyUnnecessaryReturnStatement
-        return nil
+        return ""
       end
 
     end

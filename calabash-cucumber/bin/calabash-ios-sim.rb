@@ -1,51 +1,21 @@
-require 'sim_launcher'
-require 'calabash-cucumber/launch/simulator_helper'
+require 'calabash-cucumber/utils/simulator_accessibility'
+require 'calabash-cucumber/utils/logging'
+
+include Calabash::Cucumber::Logging
+include Calabash::Cucumber::SimulatorAccessibility
 
 def quit_sim
-  `echo 'application "iPhone Simulator" quit' | osascript`
+  _deprecated('0.9.169', 'use Calabash::Cucumber::SimulatorAccessibility.quit_simulator', :warn)
+  quit_simulator
 end
 
 def calabash_sim_reset
-  reset_script = File.expand_path("#{@script_dir}/reset_simulator.scpt")
-  app_path = File.expand_path("#{@script_dir}/EmptyAppHack.app")
-  launcher = SimLauncher::Simulator.new
-
-  sdks = ENV['SDK_VERSIONS']
-  if sdks
-    sdks = sdks.split(",")
-  else
-    sdks = SimLauncher::SdkDetector.new(launcher).available_sdk_versions
-  end
-
-
-  sdks.each do |sdk|
-    launcher.launch_ios_app(app_path, sdk, ENV['DEVICE'] || 'iphone')
-    puts `osascript #{reset_script}`
-  end
-
-
+  reset_simulator_content_and_settings
 end
 
 def calabash_sim_accessibility
-  Calabash::Cucumber::SimulatorHelper.stop
-  old = ['5.*','6.*','7.0*'].map do |x|
-    Dir.glob(File.join(File.expand_path("~/Library"), "Application Support", "iPhone Simulator", "7.0*", "Library", "Preferences"))
-  end.flatten
-
-  rest = Dir.glob(File.join(File.expand_path("~/Library"), "Application Support", "iPhone Simulator", "*.*", "Library", "Preferences"))
-  rest = rest - old
-  (old+rest).each do |sim_pref_dir|
-    fp = File.expand_path("#{@script_dir}/data/")
-    if rest.include?(sim_pref_dir)
-      tgt = 'com.apple.Accessibility-5.1.plist'
-    else
-      tgt = 'com.apple.Accessibility.plist'
-    end
-    FileUtils.cp("#{fp}/#{tgt}", File.join(sim_pref_dir, 'com.apple.Accessibility.plist'))
-  end
-
+  enable_accessibility_on_simulators
 end
-
 
 def calabash_sim_location(args)
 
@@ -136,7 +106,7 @@ end
 
 
 def calabash_sim_device(args)
-  quit_sim
+  quit_simulator
   options = ["iPad", "iPad_Retina", "iPhone", "iPhone_Retina", "iPhone_Retina_4inch"]
   if args.length != 1 or not options.find { |x| x == args[0] }
     print_usage

@@ -27,10 +27,11 @@ If you have any questions about Calabash iOS, please use the google group
 
 For Xamarin users, we recommend the free Xamarin [Calabash component](https://components.xamarin.com/view/calabash/) which replaces the `calabash-ios setup` step below.
 
-Also the Calabash.app is an OS X app containing precompiled versions of Ruby, Calabash and the Xamarin Test Cloud gem.
+For setup with CocoaPods, please follow the excellent guide from Angel G. Olloqui
 
-[https://s3.amazonaws.com/calabashapp/Calabash.zip](https://s3.amazonaws.com/calabashapp/Calabash.zip)
+[http://angelolloqui.com/blog/25-Acceptance-testing-with-Calabash-and-CocoaPods](http://angelolloqui.com/blog/25-Acceptance-testing-with-Calabash-and-CocoaPods)
 
+and see example project: [https://github.com/calabash/calabash-ios-example](https://github.com/calabash/calabash-ios-example).
 
 The rest of this guide was writting using XCode 5, but should also work for XCode versions >= 4.3.
 
@@ -46,7 +47,7 @@ The rest of this guide was writting using XCode 5, but should also work for XCod
 
 You need to have Ruby installed. This is installed by default on MacOSX.
 
-Verify by running `ruby -v` in a terminal - it should print "ruby 1.8.7" (or higher). We do recommend using Ruby 2.0+.
+Verify by running `ruby -v` in a terminal. It should be at least '1.9' but we do recommend using Ruby 2.0+.
 
 ### Fast track
 
@@ -210,22 +211,6 @@ If you are already using Calabash iOS in a project and you want to update to the
 [Updating your Calabash iOS version](https://github.com/calabash/calabash-ios/wiki/B1-Updating-your-Calabash-iOS-version)
 
 
-#### Troubleshooting Installation
-
-On Mountain Lion with Ruby 1.8.x, you may see an error like this:
-```
-    ~$ sudo gem install calabash-cucumber
-    Password:
-    Building native extensions.  This could take a while...
-    ERROR:  Error installing calabash-android:
-    ERROR: Failed to build gem native extension.
-
-    /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby extconf.rb
-    mkmf.rb can't find header files for ruby at /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/ruby.h
-```
-
-One possible cause can be not having the correct Command Line Tools (compiler tool chain) for your OS X release. For example, for OS X 10.8 "Mountain Lion" you need the "Mountain Lion" version of these. You can install them from Xcode Preferences pane (in the Download tab).
-
 Important notice
 ================
 
@@ -279,7 +264,7 @@ Note that calabash-ios will backup your project file:
 
 The project file is copied to `project.pbxproj.bak`. In case something goes wrong you can move this file back to `project.pbxproj` (in your .xcodeproj) folder.
 
-Setup will modify your xcode project file to use Calabash iOs. You should now have a new Scheme named [target]-cal in Xcode:
+Setup will modify your xcode project file to use `calabash-ios`. You should now have a new Scheme named [target]-cal in Xcode:
 
 ![-cal scheme](documentation/images/scheme.png "-cal scheme")
 

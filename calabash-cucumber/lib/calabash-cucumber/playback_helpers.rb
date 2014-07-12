@@ -1,7 +1,11 @@
+require 'calabash-cucumber/utils/logging'
+require 'calabash-cucumber/device'
 
 module Calabash
   module Cucumber
     module PlaybackHelpers
+
+      include Calabash::Cucumber::Logging
 
       DATA_PATH = File.expand_path(File.dirname(__FILE__))
 
@@ -19,11 +23,6 @@ module Calabash
         directories.each { |dir|
           path = "#{dir}/#{recording}"
           if File.exists?(path)
-            # useful for debugging recordings, but too verbose for release
-            # suggest (yet) another variable CALABASH_DEBUG_PLAYBACK ?
-            #if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
-            #  puts "found compatible playback: '#{path}'"
-            #end
             return File.read(path)
           end
         }
@@ -40,18 +39,12 @@ module Calabash
       end
 
       def load_playback_data(recording_name, options={})
-        os = options['OS'] || ENV['OS']
         device = options['DEVICE'] || ENV['DEVICE'] || 'iphone'
 
-        unless os
-          if @calabash_launcher && @calabash_launcher.active?
-            major = @calabash_launcher.ios_major_version
-          else
-            major = Calabash::Cucumber::SimulatorHelper.ios_major_version
-          end
+        major = Calabash::Cucumber::Launcher.launcher.ios_major_version
 
-          unless major
-            raise <<EOF
+        unless major
+          raise <<EOF
           Unable to determine iOS major version
           Most likely you have updated your calabash-cucumber client
           but not your server. Please follow closely:
@@ -60,9 +53,8 @@ https://github.com/calabash/calabash-ios/wiki/B1-Updating-your-Calabash-iOS-vers
 
           If you are running version 0.9.120+ then please report this message as a bug.
 EOF
-          end
-          os = "ios#{major}"
         end
+        os = "ios#{major}"
 
         rec_dir = ENV['PLAYBACK_DIR'] || "#{Dir.pwd}/features/playback"
 
@@ -70,7 +62,7 @@ EOF
         data = find_compatible_recording(recording_name, os, rec_dir, device, candidates)
 
         if data.nil? and device=='ipad'
-          if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
+          if full_console_logging?
             puts "Unable to find recording for #{os} and #{device}. Trying with #{os} iphone"
           end
           data = find_compatible_recording(recording_name, os, rec_dir, 'iphone', candidates)
@@ -157,17 +149,11 @@ EOF
         end
 
         device = ENV['DEVICE'] || 'iphone'
-        os = ENV['OS']
 
-        unless os
-          if @calabash_launcher && @calabash_launcher.active?
-            major = @calabash_launcher.ios_major_version
-          else
-            major = Calabash::Cucumber::SimulatorHelper.ios_major_version
-          end
+        major = Calabash::Cucumber::Launcher.launcher.ios_major_version
 
-          unless major
-            raise <<EOF
+        unless major
+          raise <<EOF
           Unable to determine iOS major version
           Most likely you have updated your calabash-cucumber client
           but not your server. Please follow closely:
@@ -176,9 +162,9 @@ https://github.com/calabash/calabash-ios/wiki/B1-Updating-your-Calabash-iOS-vers
 
           If you are running version 0.9.120+ then please report this message as a bug.
 EOF
-          end
-          os = "ios#{major}"
+
         end
+        os = "ios#{major}"
 
         file_name = "#{file_name}_#{os}_#{device}.base64"
         system('/usr/bin/plutil -convert binary1 -o _recording_binary.plist _recording.plist')
@@ -187,7 +173,7 @@ EOF
 
         rec_dir = ENV['PLAYBACK_DIR'] || "#{Dir.pwd}/features/playback"
         unless File.directory?(rec_dir)
-          if ENV['CALABASH_FULL_CONSOLE_OUTPUT'] == '1'
+          if full_console_logging?
             puts "creating playback directory at '#{rec_dir}'"
           end
           system("mkdir -p #{rec_dir}")

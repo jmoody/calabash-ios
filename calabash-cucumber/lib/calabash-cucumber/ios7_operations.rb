@@ -4,8 +4,6 @@ require 'calabash-cucumber/actions/instruments_actions'
 require 'calabash-cucumber/actions/playback_actions'
 require 'calabash-cucumber/environment_helpers'
 
-
-
 module Calabash
   module Cucumber
     module IOS7Operations
@@ -14,10 +12,12 @@ module Calabash
 
       # todo deprecate the Calabash::Cucumber::IOS7Operations
 
+
       # <b>DEPRECATED</b>
       #
       # abstracted into <tt>actions/instruments_actions.rb</tt> - actions that
       # can be performed under instruments
+      # @!visibility private
       def touch_ios7(options)
         ui_query = options[:query]
         offset =  options[:offset]
@@ -30,6 +30,7 @@ module Calabash
         end
       end
 
+      # @!visibility private
       def swipe_ios7(options)
         ui_query = options[:query]
         offset =  options[:offset]
@@ -43,6 +44,7 @@ module Calabash
         end
       end
 
+      # @!visibility private
       def pinch_ios7(in_or_out, options)
         ui_query = options[:query]
         offset =  options[:offset]
@@ -57,6 +59,7 @@ module Calabash
         end
       end
 
+      # @!visibility private
       def pan_ios7(from, to, options={})
         from_result = find_and_normalize_or_raise from
         to_result = find_and_normalize_or_raise to
@@ -66,6 +69,7 @@ module Calabash
         [to_result]
       end
 
+      # @!visibility private
       def double_tap_ios7(options)
         ui_query = options[:query]
         offset =  options[:offset]
@@ -79,6 +83,7 @@ module Calabash
         end
       end
 
+      # @!visibility private
       def two_finger_tap_ios7(options)
         ui_query = options[:query]
         offset =  options[:offset]
@@ -92,6 +97,7 @@ module Calabash
         end
       end
 
+      # @!visibility private
       def flick_ios7(options, delta)
         ui_query = options[:query]
         offset =  options[:offset]
@@ -105,6 +111,7 @@ module Calabash
         end
       end
 
+      # @!visibility private
       def touch_hold_ios7(options)
         ui_query = options[:query]
         offset =  options[:offset]
