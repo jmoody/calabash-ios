@@ -17,9 +17,8 @@ fi
 #  ["staticlib/calabash.framework.zip"] are not files
 touch calabash.framework
 zip -r calabash.framework.zip calabash.framework
-ls -al
-mv ./calabash.framework.zip ./staticlib/calabash.framework.zip
-rm ./calabash.framework
+cp calabash.framework.zip staticlib/
+rm calabash.framework*
 
 exit 0
 
