@@ -15,11 +15,10 @@ fi
 # This prevents bundler from installing bins or native extensions, but that may not affect its functionality.
 # The validation message from Rubygems was:
 #  ["staticlib/calabash.framework.zip"] are not files
-cd staticlib
 touch calabash.framework
 zip -r calabash.framework.zip calabash.framework
+mv calabash.framework.zip staticlib/
 rm calabash.framework
-cd ..
 
 gem install --no-document bundler
 RETVAL=$?
