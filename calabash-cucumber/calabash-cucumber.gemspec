@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = 'calabash-ios'
   s.require_paths = ['lib']
+  s.licenses       = ['EPL-1.0']
 
   s.add_dependency('cucumber', '~> 1.3.0')
   s.add_dependency('calabash-common', '~> 0.0.1')
