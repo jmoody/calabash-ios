@@ -17,7 +17,7 @@ fi
 #  ["staticlib/calabash.framework.zip"] are not files
 touch calabash.framework
 zip -r calabash.framework.zip calabash.framework
-mv calabash.framework.zip staticlib/
+mv calabash.framework.zip ./staticlib/calabash.framework.zip
 rm calabash.framework
 
 gem install --no-document bundler
