@@ -17,22 +17,22 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.licenses       = ['EPL-1.0']
 
-  s.add_dependency('cucumber', '~> 1.3.0')
-  s.add_dependency('calabash-common', '~> 0.0.1')
-  s.add_dependency('json')
-  s.add_dependency('edn', '1.0.6')
-  s.add_dependency('CFPropertyList','~> 2.2.8')
-  s.add_dependency('sim_launcher', '~> 0.4.11')
-  s.add_dependency('slowhandcuke')
-  s.add_dependency('geocoder', '~>1.1.8')
-  s.add_dependency('httpclient', '~> 2.3.3')
-  s.add_dependency('bundler', '~> 1.1')
-  s.add_dependency('run_loop', '~> 0.2.1')
-  s.add_dependency('awesome_print')
+  s.add_dependency('cucumber', '~> 1.3')
+  s.add_dependency('calabash-common', '~> 0')
+  s.add_dependency('json', '~> 1.8')
+  s.add_dependency('edn', '~> 1.0', '>= 1.0.6')
+  s.add_dependency('CFPropertyList','~> 2.2')
+  s.add_dependency('sim_launcher', '~> 0.4')
+  s.add_dependency('slowhandcuke', '~> 0')
+  s.add_dependency('geocoder', '~>1.1')
+  s.add_dependency('httpclient', '~> 2.4')
+  s.add_dependency('bundler', '~> 1.6')
+  s.add_dependency('run_loop', '~> 0.2')
+  s.add_dependency('awesome_print', '~> 1.2')
 
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency('yard', '~> 0.8.7.4')
-  s.add_development_dependency('redcarpet')
+  s.add_development_dependency('rake', '~> 10.3')
+  s.add_development_dependency('rspec', '3.0')
+  s.add_development_dependency('yard', '~> 0.8')
+  s.add_development_dependency('redcarpet', '~> 3.1')
 
 end
