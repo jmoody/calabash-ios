@@ -51,6 +51,10 @@ fi
 
 # on-simulator tests of features in test/cucumber
 cd test/cucumber
+rm -rf Gemfile.lock
+rm -rf .bundle
+rm -rf vendor
+bundle install --deployment
 
 # remove any stale targets
 bundle exec calabash-ios sim reset
@@ -106,7 +110,12 @@ if [ $RETVAL != 0 ]; then
     exit $RETVAL
 fi
 
-gem install --no-document xamarin-test-cloud
-test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c xtc-profiles.yml -p default
+bundle exec test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c xtc-profiles.yml -p default
 
-exit 0
+RETVAL=$?
+
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: XTC job failed."
+fi
+
+exit $RETVAL
