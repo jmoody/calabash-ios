@@ -1,12 +1,19 @@
 language: objective-c
-rvm:
-#- 1.9.3
-#- 2.0.0
-- 2.1.1
 
-env:
-  global:
-    #XTC_API_TOKEN_MOODY
-    secure: wfr8/gNcCfvgI98kefYgWUnGj3tm355d1LJXILggwEgAUqdSmVQs0eIBjYBpzLIS8VNs3tTb7d7cvbAr/JTQHP6OUMxRSwwk0W+HKtJWWMBjrnI3Ywfrv9WRefKJRhqiXgPN1HO9JXLgh7aFl1Rdd1vtPjhEomergcABSxyREtU=
+before_script:
+- ./scripts/add-keychain.sh
+
+after_script:
+ - ./scripts/travis/remove-keychain.sh
 
 script: script/travis-ci
+
+rvm:
+- 2.1.1
+
+# XTC_API_TOKEN_MOODY - script/travis-ci
+# DEV_P12_PASSWORD    - script/add-keychain.sh
+env:
+  global:
+  - secure: wfr8/gNcCfvgI98kefYgWUnGj3tm355d1LJXILggwEgAUqdSmVQs0eIBjYBpzLIS8VNs3tTb7d7cvbAr/JTQHP6OUMxRSwwk0W+HKtJWWMBjrnI3Ywfrv9WRefKJRhqiXgPN1HO9JXLgh7aFl1Rdd1vtPjhEomergcABSxyREtU=
+  - secure: N016LPlu+Xee7XKc115q42NAQwNdHyiu/8L2+HVdOevZt8BfLfnMIzgELnMxL0+/9JcKIwEpIDIZSn927q43Q5JwESPm7XV210eC4GXkW2a5zmxLnfskmjF7IbPLRib988QIAQONmB+UP0ZDWOSpC2ehd7cXu3F2Ko1haHDWMBg=
