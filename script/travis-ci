@@ -51,6 +51,7 @@ fi
 
 # on-simulator smoke tests against jmoody/calabash-ios-example fork
 cp -r vendor test/cucumber/
+cp Gemfile.lock test/cucumber/
 cd test/cucumber
 
 bundle install --local
