@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+TRAVIS_PROVISIONING_PROFILE="${PWD}/${TRAVIS_PROVISIONING_PROFILE}"
+
 cd calabash-cucumber
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
@@ -78,7 +80,7 @@ fi
 # fi
 
 # a sample xtc job
-./xtc-prepare.sh
+./xtc-prepare.sh "${TRAVIS_CODESIGNING_DEVELOPER}" "${TRAVIS_PROVISIONING_PROFILE}"
 cp Gemfile xtc-staging/Gemfile
 cd ./xtc-staging
 
