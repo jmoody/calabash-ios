@@ -1,10 +1,10 @@
 language: objective-c
 
 before_script:
-- ./scripts/add-keychain.sh
+- ./script/add-keychain.sh
 
 after_script:
- - ./scripts/travis/remove-keychain.sh
+ - ./script/travis/remove-keychain.sh
 
 script: script/travis-ci
 
