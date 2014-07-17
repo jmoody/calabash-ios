@@ -8,3 +8,4 @@ security import ./script/dev.cer   -k ~/Library/Keychains/ios-build.keychain -T 
 security import ./script/dev.p12   -k ~/Library/Keychains/ios-build.keychain -P $DEV_P12_PASSWORD
 mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
 cp ./script/travis.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+ls -al ~/Library/MobileDevice/Provisioning\ Profiles/
