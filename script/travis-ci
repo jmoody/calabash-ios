@@ -30,6 +30,7 @@ else
     echo "INFO: installed bundler"
 fi
 
+bundle install
 bundle install --deployment
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
@@ -50,9 +51,9 @@ fi
 # fi
 
 # on-simulator smoke tests against jmoody/calabash-ios-example fork
-cp -r vendor test/cucumber/
-cp -r .bundle test/cucumber/
-cp Gemfile.lock test/cucumber/
+#cp -r vendor test/cucumber/
+#cp -r .bundle test/cucumber/
+#cp Gemfile.lock test/cucumber/
 cd test/cucumber
 
 #bundle install --deployment
