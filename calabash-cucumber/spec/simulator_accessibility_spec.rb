@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'calabash-cucumber/utils/simulator_accessibility'
 require 'calabash-cucumber/launcher'
 require 'sim_launcher'
+require 'retriable'
 
 include Calabash::Cucumber::SimulatorAccessibility
 
@@ -180,21 +181,29 @@ describe 'simulator accessibility tool' do
         # iOS 7 hardware
         # -1 Apple
         excluded = [
-              'iPhone - Simulator - iOS 7.0',
-              'iPhone - Simulator - iOS 7.1',
-              'iPhone Retina (4-inch 64-bit) - Simulator - iOS 6.1',
-              'iPad Retina (64-bit) - Simulator - iOS 6.1'
-        ]
+                    'iPhone - Simulator - iOS 7.0',
+                    'iPhone - Simulator - iOS 7.1',
+                    'iPhone Retina (4-inch 64-bit) - Simulator - iOS 6.1',
+                    'iPad Retina (64-bit) - Simulator - iOS 6.1'
+                   ]
+        #if travis_ci?
+        #  excluded < 'iPad Retina (64-bit) - Simulator - iOS 7.1'
+        #end
+
+        on_retry = Proc.new do |exception, tries|
+          enable_accessibility_on_simulators
+        end
+
         instruments(:sims).each do |simulator|
           if excluded.include?(simulator)
             calabash_warn("skipping simulator '#{simulator}' - instruments passed us an invalid configuration!")
           else
             @launch_args[:device_target] = simulator
-            calabash_info("starting simulator '#{simulator}'")
             begin
-              expect(@launcher.new_run_loop(@launch_args)).to be_a(Hash)
-            rescue Exception => e
-              calabash_info "could not launch '#{simulator}' - #{e}"
+              Retriable.retriable :on_retry => on_retry do
+                calabash_info("starting simulator '#{simulator}'")
+                expect(@launcher.new_run_loop(@launch_args)).to be_a(Hash)
+              end
             ensure
               @launcher.stop
               sleep(2)
