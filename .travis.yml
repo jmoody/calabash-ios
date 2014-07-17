@@ -19,9 +19,11 @@ rvm:
 # script/travis-ci                 TRAVIS_CODESIGNING_DEVELOPER - passed to - jmoody/calabasy-ios-example/xtc-prepare.sh
 
 # script/travis-ci                 TRAVIS_PROVISIONING_PROFILE  - passed to - jmoody/calabash-ios-example/xtc-prepare.sh
+# script/travis-ci                 XTC_DEVICE_SET - passed to test-cloud submit job
 env:
   global:
   - TRAVIS_PROVISIONING_PROFILE=script/travis.mobileprovision
+  - XTC_DEVICE_SET=aa59649c
   - secure: vpssmPm8t01r1fVU3yMVoDnSEuZnmMpTEIwTz2KO/tfWZIuIW2dL4PqBywlg98cEUEQrmfvt0R7TAPVYOhZF9+qVCYlp+pyYfyS5cnSwVdq+veWlszVAMn5YARUnBsBL63vIaRtdHHfktIXS1CSCdWRLPXIp4uQ2h4HnKtlCICs=
   - secure: N016LPlu+Xee7XKc115q42NAQwNdHyiu/8L2+HVdOevZt8BfLfnMIzgELnMxL0+/9JcKIwEpIDIZSn927q43Q5JwESPm7XV210eC4GXkW2a5zmxLnfskmjF7IbPLRib988QIAQONmB+UP0ZDWOSpC2ehd7cXu3F2Ko1haHDWMBg=
   - secure: lgOt9s3/xRyglD/vfSH8LGrvollxywBflEXxfv1Jlwjrg6553V4/xWwJNoVCP2+6pohTqnka6IcXGUi0FHhPtfL49Q3v95tD/BPft1W241+s57HYxEbzk1uer0GdAkEth/ETaFLze4pVLlVK3ruXUvS3YnxfYtc4kitzVtZUECw=

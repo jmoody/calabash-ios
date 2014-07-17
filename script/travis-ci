@@ -81,11 +81,12 @@ fi
 
 # a sample xtc job
 echo "calling xtc-prepare with ${TRAVIS_CODESIGNING_DEVELOPER} and ${TRAVIS_PROVISIONING_PROFILE}"
+
 ./xtc-prepare.sh "${TRAVIS_CODESIGNING_DEVELOPER}" "${TRAVIS_PROVISIONING_PROFILE}"
 cp Gemfile xtc-staging/Gemfile
 cd ./xtc-staging
 
 gem install xamarin-test-cloud
-test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c cucumber.yml -p default
+test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c cucumber.yml -p default
 
 exit 0
