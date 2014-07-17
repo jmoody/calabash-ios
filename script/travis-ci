@@ -40,17 +40,16 @@ else
 fi
 
 # rspec tests
-# bundle exec rake spec
-# RETVAL=$?
-# if [ $RETVAL != 0 ]; then
-#     echo "FAIL: failed rspec tests"
-#     exit $RETVAL
-# else
-#     echo "INFO: passed rspec tests"
-# fi
+bundle exec rake spec
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed rspec tests"
+    exit $RETVAL
+else
+    echo "INFO: passed rspec tests"
+fi
 
-# on-simulator smoke tests against jmoody/calabash-ios-example fork
-
+# on-simulator tests of features in test/cucumber
 cd test/cucumber
 
 # remove any stale targets
@@ -107,7 +106,7 @@ if [ $RETVAL != 0 ]; then
     exit $RETVAL
 fi
 
-gem install xamarin-test-cloud
+gem install --no-document xamarin-test-cloud
 test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c xtc-profiles.yml -p default
 
 exit 0
