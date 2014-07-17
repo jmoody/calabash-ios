@@ -30,7 +30,6 @@ else
     echo "INFO: installed bundler"
 fi
 
-#bundle install
 bundle install --deployment
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
@@ -51,12 +50,8 @@ fi
 # fi
 
 # on-simulator smoke tests against jmoody/calabash-ios-example fork
-#cp -r vendor test/cucumber/
-#cp -r .bundle test/cucumber/
-#cp Gemfile.lock test/cucumber/
-cd test/cucumber
 
-#bundle install --deployment
+cd test/cucumber
 
 # remove any stale targets
 bundle exec calabash-ios sim reset
@@ -93,8 +88,14 @@ bundle exec cucumber -p sim61_ipad_r $CUCUMBER_ARGS
 RETVAL=$(($RETVAL+$?))
 bundle exec cucumber -p sim71_ipad_r $CUCUMBER_ARGS
 RETVAL=$(($RETVAL+$?))
-bundle exec cucumber -p sim71_ipad_r_64b $CUCUMBER_ARGS
-RETVAL=$(($RETVAL+$?))
+
+if [ -z $TRAVIS ]; then
+    bundle exec cucumber -p sim71_ipad_r_64b $CUCUMBER_ARGS
+    RETVAL=$(($RETVAL+$?))
+else
+    bundle exec cucumber -p sim70_ipad_r_64b $CUCUMBER_ARGS
+    RETVAL=$(($RETVAL+$?))
+fi
 
 bundle exec cucumber -p sim61_sl $CUCUMBER_ARGS
 RETVAL=$(($RETVAL+$?))
@@ -103,9 +104,10 @@ set -o errexit
 
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed $RETVAL out of 9 simulators"
+    exit $RETVAL
 fi
 
-#gem install xamarin-test-cloud
-#test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c xtc-profiles.yml -p default
+gem install xamarin-test-cloud
+test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c xtc-profiles.yml -p default
 
 exit 0
