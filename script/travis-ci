@@ -80,6 +80,7 @@ fi
 # fi
 
 # a sample xtc job
+echo "calling xtc-prepare with ${TRAVIS_CODESIGNING_DEVELOPER} and ${TRAVIS_PROVISIONING_PROFILE}"
 ./xtc-prepare.sh "${TRAVIS_CODESIGNING_DEVELOPER}" "${TRAVIS_PROVISIONING_PROFILE}"
 cp Gemfile xtc-staging/Gemfile
 cd ./xtc-staging

@@ -4,7 +4,7 @@ before_script:
 - ./script/add-keychain.sh
 
 after_script:
- - ./script/travis/remove-keychain.sh
+- ./script/travis/remove-keychain.sh
 
 script: script/travis-ci
 
