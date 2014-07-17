@@ -109,9 +109,10 @@ xcodebuild \
     -scheme "${TARGET_NAME}" \
     -sdk iphoneos \
     -configuration "${CAL_BUILD_CONFIG}" \
-    clean build | $RBENV_EXEC bundle exec xcpretty -c
+    clean build # | $RBENV_EXEC bundle exec xcpretty -c
 
-RETVAL=${PIPESTATUS[0]}
+RETVAL=$?
+#RETVAL=${PIPESTATUS[0]}
 
 set -o errexit
 
@@ -131,7 +132,7 @@ xcrun -sdk iphoneos PackageApplication -v "${PWD}/${APP_BUNDLE_PATH}" -o "${XAMA
 RETVAL=$?
 
 if [ $RETVAL != 0 ]; then
-    echo "FAIL:  build step failed"
+    echo "FAIL:  package step failed"
     exit $RETVAL
 fi
 
