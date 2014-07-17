@@ -4,4 +4,9 @@ rvm:
 #- 2.0.0
 - 2.1.1
 
+env:
+  global:
+    #XTC_API_TOKEN_MOODY
+    secure: wfr8/gNcCfvgI98kefYgWUnGj3tm355d1LJXILggwEgAUqdSmVQs0eIBjYBpzLIS8VNs3tTb7d7cvbAr/JTQHP6OUMxRSwwk0W+HKtJWWMBjrnI3Ywfrv9WRefKJRhqiXgPN1HO9JXLgh7aFl1Rdd1vtPjhEomergcABSxyREtU=
+
 script: script/travis-ci

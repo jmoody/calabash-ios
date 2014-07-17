@@ -52,7 +52,7 @@ rm -rf calabash-ios-example
 git clone https://github.com/jmoody/calabash-ios-example
 cd calabash-ios-example
 
-git checkout -b trashy origin/demo/gemspec-dependencies-should-use-semantic-versioning
+git checkout -b test/workspace origin/demo/gemspec-dependencies-should-use-semantic-versioning
 
 ./run-tests.sh
 RETVAL=$?
@@ -62,5 +62,12 @@ if [ $RETVAL != 0 ]; then
 else
     echo "INFO: passed calabahs-ios-example smoke tests"
 fi
+
+./xtc-prepare.sh
+cp Gemfile xtc-staging/Gemfile
+cd ./xtc-staging
+
+gem install xamarin-test-cloud
+test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN_MOODY} -d aa59649c -c cucumber.yml -p default
 
 exit 0
