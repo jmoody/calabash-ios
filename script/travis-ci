@@ -48,7 +48,7 @@ fi
 #     echo "INFO: passed rspec tests"
 # fi
 
-bundle exec rake travis_ci:jmoody:calabash_ios_example_sim
+rake travis_ci:jmoody:calabash_ios_example_sim
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed calabash-ios-example smoke tests"
