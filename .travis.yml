@@ -9,6 +9,8 @@ after_script:
 script: script/travis-ci
 
 rvm:
+#- 1.9.3
+#- 2.1.0
 - 2.1.1
 
 # secure
