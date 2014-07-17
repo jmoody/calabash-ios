@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-TRAVIS_PROVISIONING_PROFILE="${PWD}/${TRAVIS_PROVISIONING_PROFILE}"
-
 cd calabash-cucumber
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
@@ -52,94 +50,57 @@ fi
 # fi
 
 # on-simulator smoke tests against jmoody/calabash-ios-example fork
-rm -rf calabash-ios-example
-git clone https://github.com/jmoody/calabash-ios-example
+cd test/cucumber
 
-cd calabash-ios-example
+bundle install --local
 
+# remove any stale targets
+bundle exec calabash-ios sim reset
+
+# Disable exiting on error so script continues if tests fail
 set +o errexit
-git checkout -b test/workspace "origin/${TRAVIS_BRANCH}"
-RETVAL=$?
-set -o errexit
 
-if [ $RETVAL != 0 ]; then
-    echo "WARN: skipping simulator tests and XTC job!"
-    echo "WARN: $TRAVIS_BRANCH does not exist on jmoody/calabash-ios-example repository"
-    echo "WARN: exiting success without simulator tests and XTC job."
-    exit 0
-fi
+export APP_BUNDLE_PATH="./LPSimpleExample-cal.app"
 
-# exhaustive on-simulator smoke tests
-# ./run-tests.sh
-# RETVAL=$?
-# if [ $RETVAL != 0 ]; then
-#     echo "FAIL: failed calabash-ios-example smoke tests"
-#     exit $RETVAL
+RETVAL=0
+
+bundle exec cucumber -p sim61_4in           $CUCUMBER_ARGS
+RETVAL=$(($RETVAL+$?))
+# $RBENV_EXEC bundle exec cucumber -p sim71_4in          -f json -o ci-reports/calabash/iphone-71-4in.json $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+
+# # Will not pass on travis although a similar rspec test does.
+# # Instead we run on the 4in 7.0 64 bit simulator.
+# if [ -z $TRAVIS ]; then
+#     $RBENV_EXEC bundle exec cucumber -p sim71_64b          -f json -o ci-reports/calabash/iphone-71-4in-64b.json $CUCUMBER_ARGS
+#     RETVAL=$(($RETVAL+$?))
 # else
-#     echo "INFO: passed calabahs-ios-example smoke tests"
+#     $RBENV_EXEC bundle exec cucumber -p sim70_64b          -f json -o ci-reports/calabash/iphone-70-4in-64b.json $CUCUMBER_ARGS
+#     RETVAL=$(($RETVAL+$?))
 # fi
 
-bundle install
+# $RBENV_EXEC bundle exec cucumber -p sim61r             -f json -o ci-reports/calabash/iphone-61-3.5in.json $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+# $RBENV_EXEC bundle exec cucumber -p sim71r             -f json -o ci-reports/calabash/iphone-71-3.5in.json $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
 
-XAMARIN_DIR="${PWD}/xtc-staging"
+# $RBENV_EXEC bundle exec cucumber -p sim61_ipad_r       -f json -o ci-reports/calabash/ipad-61.json $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+# $RBENV_EXEC bundle exec cucumber -p sim71_ipad_r       -f json -o ci-reports/calabash/ipad-71.json $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+# $RBENV_EXEC bundle exec cucumber -p sim71_ipad_r_64b   -f json -o ci-reports/calabash/ipad-71-64b.json $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
 
-echo "INFO: creating the ./xtc-staging directory"
-rm -rf "${XAMARIN_DIR}"
-mkdir -p "${XAMARIN_DIR}"
-
-echo "INFO: copying features over to ${XAMARIN_DIR}"
-cp -r features "${XAMARIN_DIR}/"
-
-echo "INFO: installing config/xtc-profiles.yml to ${XAMARIN_DIR}/cucumber.yml"
-cp "./config/xtc-profiles.yml" "${XAMARIN_DIR}/cucumber.yml"
-
-TARGET_NAME="LPSimpleExample-cal"
-XC_PROJECT="LPSimpleExample.xcodeproj"
-XC_SCHEME="${TARGET_NAME}"
-CAL_BUILD_CONFIG=Debug
-CAL_BUILD_DIR="${PWD}/build/jenkins"
-rm -rf "${CAL_BUILD_DIR}"
-mkdir -p "${CAL_BUILD_DIR}"
-
-set +o errexit
-
-xcodebuild \
-    -derivedDataPath "${CAL_BUILD_DIR}" \
-    -project "${XC_PROJECT}" \
-    -scheme "${TARGET_NAME}" \
-    -sdk iphoneos \
-    -configuration "${CAL_BUILD_CONFIG}" \
-    clean build # | $RBENV_EXEC bundle exec xcpretty -c
-
-RETVAL=$?
-#RETVAL=${PIPESTATUS[0]}
+# $RBENV_EXEC bundle exec cucumber -p sim61_sl           -f json -o ci-reports/calabash/ipad-61-no-instruments.json $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
 
 set -o errexit
 
 if [ $RETVAL != 0 ]; then
-    echo "FAIL:  build step failed"
-    exit $RETVAL
+    echo "FAIL: failed $RETVAL out of 9 simulators"
 fi
 
-set +o errexit
-
-APP_BUNDLE_PATH="${CAL_BUILD_DIR}/Build/Products/${CAL_BUILD_CONFIG}-iphoneos/${TARGET_NAME}.app"
-IPA_PATH="${XAMARIN_DIR}/{TARGET_NAME}.ipa"
-set -o errexit
-
-xcrun -sdk iphoneos PackageApplication -v "${PWD}/${APP_BUNDLE_PATH}" -o "${XAMARIC}/${IPA_PATH}" --sign "${TRAVIS_CODESIGNING_DEVELOPER}" --embed "${TRAVIS_PROVISIONING_PROFILE}"
-
-RETVAL=$?
-
-if [ $RETVAL != 0 ]; then
-    echo "FAIL:  package step failed"
-    exit $RETVAL
-fi
-
-cp Gemfile "${XAMARIN_DIR}/Gemfile"
-cd "${XAMARIN_DIR}"
-
-gem install xamarin-test-cloud
-test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c cucumber.yml -p default
+#gem install xamarin-test-cloud
+#test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c xtc-profiles.yml -p default
 
 exit 0
