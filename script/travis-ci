@@ -39,6 +39,7 @@ else
     echo "INFO: bundled"
 fi
 
+# rspec tests
 # bundle exec rake spec
 # RETVAL=$?
 # if [ $RETVAL != 0 ]; then
@@ -48,29 +49,35 @@ fi
 #     echo "INFO: passed rspec tests"
 # fi
 
-GEM_BRANCH=`git symbolic-ref -q --short HEAD | tr -d '\n'`
-GEM_BR_BASENAME=`basename ${GEM_BRANCH}`
-
-echo "INFO: gem branch $GEM_BRANCH"
-echo "INFO: root $GEM_BR_BASENAME"
-
-instruments -s devices
-
+# on-simulator smoke tests against jmoody/calabash-ios-example fork
 rm -rf calabash-ios-example
 git clone https://github.com/jmoody/calabash-ios-example
+
 cd calabash-ios-example
 
-git checkout -b test/workspace origin/demo/gemspec-dependencies-should-use-semantic-versioning
-
-./run-tests.sh
+set +o errexit
+git checkout -b test/workspace "origin/${TRAVIS_BRANCH}"
 RETVAL=$?
+set -o errexit
+
 if [ $RETVAL != 0 ]; then
-    echo "FAIL: failed calabash-ios-example smoke tests"
-    exit $RETVAL
-else
-    echo "INFO: passed calabahs-ios-example smoke tests"
+    echo "WARN: skipping simulator tests and XTC job!"
+    echo "WARN: $TRAVIS_BRANCH does not exist on jmoody/calabash-ios-example repository"
+    echo "WARN: exiting success without simulator tests and XTC job."
+    exit 0
 fi
 
+# exhaustive on-simulator smoke tests
+# ./run-tests.sh
+# RETVAL=$?
+# if [ $RETVAL != 0 ]; then
+#     echo "FAIL: failed calabash-ios-example smoke tests"
+#     exit $RETVAL
+# else
+#     echo "INFO: passed calabahs-ios-example smoke tests"
+# fi
+
+# a sample xtc job
 ./xtc-prepare.sh
 cp Gemfile xtc-staging/Gemfile
 cd ./xtc-staging
