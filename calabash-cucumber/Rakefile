@@ -75,3 +75,22 @@ end
 
 task :install_server => [:build_server]
 task :release_server => [:build_server]
+
+namespace :travis_ci do
+
+  namespace :jmoody do
+
+    task :calabash_ios_example_sim do
+      if File.exists?('./calabash-ios-example')
+        FileUtils.rm_rf('./calabash-ios-example')
+      end
+
+      system 'git clone https://github.com/jmoody/calabash-ios-example'
+      work_dir = File.expand_path('./calabash-ios-example')
+      Dir.chdir(work_dir) do
+        exec './run-tests.sh'
+      end
+    end
+
+  end
+end

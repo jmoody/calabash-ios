@@ -39,16 +39,16 @@ else
     echo "INFO: bundled"
 fi
 
-bundle exec rake spec
-RETVAL=$?
-if [ $RETVAL != 0 ]; then
-    echo "FAIL: failed rspec tests"
-    exit $RETVAL
-else
-    echo "INFO: passed rspec tests"
-fi
+# bundle exec rake spec
+# RETVAL=$?
+# if [ $RETVAL != 0 ]; then
+#     echo "FAIL: failed rspec tests"
+#     exit $RETVAL
+# else
+#     echo "INFO: passed rspec tests"
+# fi
 
-bundle exec rake ci:jmoody:calabash_ios_example
+bundle exec rake travis_ci:jmoody:calabash_ios_example_sim
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed calabash-ios-example smoke tests"
