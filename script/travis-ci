@@ -83,6 +83,6 @@ cp Gemfile xtc-staging/Gemfile
 cd ./xtc-staging
 
 gem install xamarin-test-cloud
-test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN_MOODY} -d aa59649c -c cucumber.yml -p default
+test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c cucumber.yml -p default
 
 exit 0
