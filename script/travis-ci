@@ -51,10 +51,11 @@ fi
 
 # on-simulator smoke tests against jmoody/calabash-ios-example fork
 cp -r vendor test/cucumber/
+cp -r .bundle test/cucumber/
 cp Gemfile.lock test/cucumber/
 cd test/cucumber
 
-bundle install --local
+#bundle install --deployment
 
 # remove any stale targets
 bundle exec calabash-ios sim reset
