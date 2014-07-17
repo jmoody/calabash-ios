@@ -78,7 +78,13 @@ if [ -z $TRAVIS ]; then
     bundle exec cucumber -p sim71_64b $CUCUMBER_ARGS
     RETVAL=$(($RETVAL+$?))
 else
-     bundle exec cucumber -p sim70_64b $CUCUMBER_ARGS
+    bundle exec cucumber -p sim71_64b $CUCUMBER_ARGS
+    RETVAL=$?
+    if [ $RETVAL = 0 ]; then
+        echo "FAIL: expected iPhone iOS 7.1 64b to fail"
+        exit RETVAL
+    fi
+    bundle exec cucumber -p sim70_64b $CUCUMBER_ARGS
     RETVAL=$(($RETVAL+$?))
 fi
 
@@ -96,6 +102,12 @@ if [ -z $TRAVIS ]; then
     bundle exec cucumber -p sim71_ipad_r_64b $CUCUMBER_ARGS
     RETVAL=$(($RETVAL+$?))
 else
+    bundle exec cucumber -p sim71_ipad_r_64b $CUCUMBER_ARGS
+    RETVAL=$?
+    if [ $RETVAL = 0 ]; then
+        echo "FAIL: expected iPad iOS 7.1 64b to fail"
+        exit RETVAL
+    fi
     bundle exec cucumber -p sim70_ipad_r_64b $CUCUMBER_ARGS
     RETVAL=$(($RETVAL+$?))
 fi
