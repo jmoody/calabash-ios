@@ -79,12 +79,64 @@ fi
 #     echo "INFO: passed calabahs-ios-example smoke tests"
 # fi
 
-# a sample xtc job
-echo "calling xtc-prepare with ${TRAVIS_CODESIGNING_DEVELOPER} and ${TRAVIS_PROVISIONING_PROFILE}"
+bundle install
 
-./xtc-prepare.sh "${TRAVIS_CODESIGNING_DEVELOPER}" "${TRAVIS_PROVISIONING_PROFILE}"
-cp Gemfile xtc-staging/Gemfile
-cd ./xtc-staging
+XAMARIN_DIR="${PWD}/xtc-staging"
+
+echo "INFO: creating the ./xtc-staging directory"
+rm -rf "${XAMARIN_DIR}"
+mkdir -p "${XAMARIN_DIR}"
+
+echo "INFO: copying features over to ${XAMARIN_DIR}"
+cp -r features "${XAMARIN_DIR}/"
+
+echo "INFO: installing config/xtc-profiles.yml to ${XAMARIN_DIR}/cucumber.yml"
+cp "./config/xtc-profiles.yml" "${XAMARIN_DIR}/cucumber.yml"
+
+TARGET_NAME="LPSimpleExample-cal"
+XC_PROJECT="LPSimpleExample.xcodeproj"
+XC_SCHEME="${TARGET_NAME}"
+CAL_BUILD_CONFIG=Debug
+CAL_BUILD_DIR="${PWD}/build/jenkins"
+rm -rf "${CAL_BUILD_DIR}"
+mkdir -p "${CAL_BUILD_DIR}"
+
+set +o errexit
+
+xcodebuild \
+    -derivedDataPath "${CAL_BUILD_DIR}" \
+    -project "${XC_PROJECT}" \
+    -scheme "${TARGET_NAME}" \
+    -sdk iphoneos \
+    -configuration "${CAL_BUILD_CONFIG}" \
+    clean build | $RBENV_EXEC bundle exec xcpretty -c
+
+RETVAL=${PIPESTATUS[0]}
+
+set -o errexit
+
+if [ $RETVAL != 0 ]; then
+    echo "FAIL:  build step failed"
+    exit $RETVAL
+fi
+
+set +o errexit
+
+APP_BUNDLE_PATH="${CAL_BUILD_DIR}/Build/Products/${CAL_BUILD_CONFIG}-iphoneos/${TARGET_NAME}.app"
+IPA_PATH="${XAMARIN_DIR}/{TARGET_NAME}.ipa"
+set -o errexit
+
+xcrun -sdk iphoneos PackageApplication -v "${PWD}/${APP_BUNDLE_PATH}" -o "${XAMARIC}/${IPA_PATH}" --sign "${TRAVIS_CODESIGNING_DEVELOPER}" --embed "${TRAVIS_PROVISIONING_PROFILE}"
+
+RETVAL=$?
+
+if [ $RETVAL != 0 ]; then
+    echo "FAIL:  build step failed"
+    exit $RETVAL
+fi
+
+cp Gemfile "${XAMARIN_DIR}/Gemfile"
+cd "${XAMARIN_DIR}"
 
 gem install xamarin-test-cloud
 test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c cucumber.yml -p default
