@@ -48,6 +48,12 @@ fi
 #     echo "INFO: passed rspec tests"
 # fi
 
+GEM_BRANCH=`git symbolic-ref -q --short HEAD | tr -d '\n'`
+GEM_BR_BASENAME=`basename ${GEM_BRANCH}`
+
+echo "INFO: gem branc $GEM_BRANCH"
+echo "INFO: root $GEM_BR_BASENAME"
+
 rm -rf calabash-ios-example
 git clone https://github.com/jmoody/calabash-ios-example
 cd calabash-ios-example
