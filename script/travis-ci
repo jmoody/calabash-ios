@@ -48,7 +48,10 @@ fi
 #     echo "INFO: passed rspec tests"
 # fi
 
-rake travis_ci:jmoody:calabash_ios_example_sim
+rm -rf calabash-ios-example
+git clone https://github.com/jmoody/calabash-ios-example
+cd calabash-ios-example
+./run-tests.sh
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed calabash-ios-example smoke tests"
