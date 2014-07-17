@@ -13,7 +13,9 @@ rvm:
 
 # XTC_API_TOKEN       - script/travis-ci
 # DEV_P12_PASSWORD    - script/add-keychain.sh
+# TRAVIS_PROVISIONING_PROFILE jmoody/calabash-ios-example/xtc-prepare.sh
 env:
   global:
+  - TRAVIS_PROVISIONING_PROFILE=script/travis.mobileprovision
   - secure: vpssmPm8t01r1fVU3yMVoDnSEuZnmMpTEIwTz2KO/tfWZIuIW2dL4PqBywlg98cEUEQrmfvt0R7TAPVYOhZF9+qVCYlp+pyYfyS5cnSwVdq+veWlszVAMn5YARUnBsBL63vIaRtdHHfktIXS1CSCdWRLPXIp4uQ2h4HnKtlCICs=
   - secure: N016LPlu+Xee7XKc115q42NAQwNdHyiu/8L2+HVdOevZt8BfLfnMIzgELnMxL0+/9JcKIwEpIDIZSn927q43Q5JwESPm7XV210eC4GXkW2a5zmxLnfskmjF7IbPLRib988QIAQONmB+UP0ZDWOSpC2ehd7cXu3F2Ko1haHDWMBg=
