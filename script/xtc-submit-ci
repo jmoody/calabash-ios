@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+cd calabash-cucumber
+
+export CALABASH_GEMSPEC_PATH="${PWD}"
+
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed to change directory to calabash-cucumber - should called as 'script/ci'"
+    exit $RETVAL
+else
+    echo "INFO: changed directory to ${PWD}"
+fi
+
+# Enable binaries to be installed.
+#
+# calabash-cucumber at /Users/travis/build/calabash/calabash-ios/calabash-cucumber did not have a valid gemspec.
+# This prevents bundler from installing bins or native extensions, but that may not affect its functionality.
+# The validation message from Rubygems was:
+#  ["staticlib/calabash.framework.zip"] are not files
+touch calabash.framework
+zip -r calabash.framework.zip calabash.framework
+mkdir -p staticlib
+mv calabash.framework.zip staticlib/
+rm calabash.framework
+
+gem install --no-document bundler
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed to install bundler"
+    exit $RETVAL
+else
+    echo "INFO: installed bundler"
+fi
+
+rm -rf .bundle
+rm -rf vendor
+
+if [ -z $TRAVIS ]; then
+    bundle install --no-deployment
+else
+    bundle install --deployment
+fi
+
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed to bundle install"
+    exit $RETVAL
+else
+    echo "INFO: bundled"
+fi
+
+if [ -z $TRAVIS ]; then
+    bundle exec rake install
+    RETVAL=$?
+else
+    rake install
+    RETVAL=$?
+fi
+
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed to calabash-cucumber gem"
+    exit $RETVAL
+fi
+
+if [ -z $TRAVIS ]; then
+    CALABASH_VERSION=`bundle exec calabash-ios version | tr -d '\n'`
+    echo "installed calabash version: $CALABASH_VERSION"
+else
+    CALABASH_VERSION=`calabash-ios version | tr -d '\n'`
+    echo "installed calabash version: $CALABASH_VERSION"
+fi
+
+
+cd test/cucumber
+rm -rf Gemfile
+rm -rf Gemfile.lock
+rm -rf .bundle
+rm -rf vendor
+
+echo $CALABASH_VERSION
+echo "source 'http://rubygems.org'" > Gemfile
+echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
+
+gem install --no-document xamarin-test-cloud
+test-cloud submit \
+    LPSimpleExample-cal.ipa \
+    ${XTC_API_TOKEN} \
+    -d ${XTC_DEVICE_SET} \
+    -c config/xtc-profiles.yml \
+    -p default \
+    --series "travis-ci"
+
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: XTC job failed."
+    exit $RETVAL
+fi
+
+exit $RETVAL

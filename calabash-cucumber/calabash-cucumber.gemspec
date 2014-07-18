@@ -26,14 +26,13 @@ Gem::Specification.new do |s|
   s.add_dependency('slowhandcuke', '~> 0')
   s.add_dependency('geocoder', '~>1.1')
   s.add_dependency('httpclient', '~> 2.4')
-  s.add_dependency('bundler', '~> 1.6')
   s.add_dependency('run_loop', '~> 0.2')
   s.add_dependency('awesome_print', '~> 1.2')
-  s.add_dependency('xamarin-test-cloud', '~> 0.9', '>= 0.9.35')
 
+  s.add_development_dependency('bundler', '~> 1.6')
   s.add_development_dependency('rake', '~> 10.3')
   s.add_development_dependency('rspec', '3.0')
   s.add_development_dependency('yard', '~> 0.8')
   s.add_development_dependency('redcarpet', '~> 3.1')
-
+  s.add_development_dependency('travis', '~> 1.6')
 end
