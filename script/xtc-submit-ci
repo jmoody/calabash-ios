@@ -10,7 +10,17 @@ else
     echo "INFO: changed directory to ${PWD}"
 fi
 
-../script/shared-bundler-tasks.sh
+# Enable binaries to be installed.
+#
+# calabash-cucumber at /Users/travis/build/calabash/calabash-ios/calabash-cucumber did not have a valid gemspec.
+# This prevents bundler from installing bins or native extensions, but that may not affect its functionality.
+# The validation message from Rubygems was:
+#  ["staticlib/calabash.framework.zip"] are not files
+touch calabash.framework
+zip -r calabash.framework.zip calabash.framework
+mkdir -p staticlib
+mv calabash.framework.zip staticlib/
+rm calabash.framework
 
 rm -rf *.gem
 gem build calabash-cucumber.gemspec
@@ -32,7 +42,6 @@ rm -rf Gemfile
 rm -rf Gemfile.lock
 rm -rf .bundle
 rm -rf vendor
-
 
 echo "source 'http://rubygems.org'" > Gemfile
 echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
