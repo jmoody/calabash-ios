@@ -12,7 +12,7 @@ fi
 
 ../script/shared-bundler-tasks.sh
 
-rake install
+rake --trace install
 
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed to calabash-cucumber gem"
