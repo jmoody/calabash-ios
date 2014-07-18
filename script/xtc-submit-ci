@@ -69,7 +69,7 @@ echo "source 'http://rubygems.org'" > Gemfile
 
 # this is really and truly travis-ci and not the local env
 if [ ! -z $HAS_JOSH_K_SEAL_OF_APPROVAL ]; then
-    echo "gem 'calabash-cucumber', :github => 'calabash/calabash-cucumber'" >> Gemfile
+    echo "gem 'calabash-cucumber', :github => 'jmoody/calabash-cucumber'" >> Gemfile
 else
     echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
 fi
