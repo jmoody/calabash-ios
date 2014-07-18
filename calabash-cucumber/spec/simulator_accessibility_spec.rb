@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'calabash-cucumber/utils/simulator_accessibility'
 require 'calabash-cucumber/launcher'
 require 'sim_launcher'
-require 'retriable'
 
 include Calabash::Cucumber::SimulatorAccessibility
 

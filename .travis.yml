@@ -1,6 +1,8 @@
 language: objective-c
 
-script: script/travis-ci
+script:
+  - script/rspec-ci
+  - script/travis-ci
 
 rvm:
 - 1.9.3
