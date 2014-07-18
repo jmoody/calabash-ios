@@ -195,6 +195,7 @@ describe 'simulator accessibility tool' do
         travis_excluded = []
         if travis_ci?
           travis_excluded << 'iPad Retina (64-bit) - Simulator - iOS 7.1'
+          travis_excluded << 'iPhone Retina (4-inch 64-bit) - Simulator - iOS 7.1'
         end
 
         instruments(:sims).each do |simulator|

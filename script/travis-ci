@@ -122,7 +122,7 @@ if [ $RETVAL != 0 ]; then
     exit $RETVAL
 fi
 
-bundle exec test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c xtc-profiles.yml -p default
+bundle exec test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c config/xtc-profiles.yml -p default
 
 RETVAL=$?
 
