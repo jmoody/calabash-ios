@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 cd calabash-cucumber
+
+export CALABASH_GEMSPEC_PATH="${PWD}"
+
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed to change directory to calabash-cucumber - should called as 'script/ci'"
@@ -39,7 +42,7 @@ else
     echo "INFO: bundled"
 fi
 
-# rspec tests
+# # rspec tests
 bundle exec rake spec
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
@@ -49,8 +52,19 @@ else
     echo "INFO: passed rspec tests"
 fi
 
-# on-simulator tests of features in test/cucumber
+# unit tests
+ruby lib/calabash-cucumber/version.rb
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed unit tests"
+    exit $RETVAL
+else
+    echo "INFO: passed unit tests"
+fi
+
+# # on-simulator tests of features in test/cucumber
 cd test/cucumber
+rm -rf Gemfile
 rm -rf Gemfile.lock
 rm -rf .bundle
 rm -rf vendor
@@ -122,12 +136,15 @@ if [ $RETVAL != 0 ]; then
     exit $RETVAL
 fi
 
-bundle exec test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c config/xtc-profiles.yml -p default
+#echo "source 'http://rubygems.org'" > Gemfile
+#echo "gem 'calabash-cucumber', :path => '${CALABASH_GEMSPEC_PATH}'" >> Gemfile
+#bundle install
+#bundle exec test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c config/xtc-profiles.yml -p default
+#test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c config/xtc-profiles.yml -p default
 
-RETVAL=$?
-
-if [ $RETVAL != 0 ]; then
-    echo "FAIL: XTC job failed."
-fi
+# RETVAL=$?
+# if [ $RETVAL != 0 ]; then
+#     echo "FAIL: XTC job failed."
+# fi
 
 exit $RETVAL

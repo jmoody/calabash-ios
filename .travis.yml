@@ -9,8 +9,8 @@ rvm:
 
 # secure
 # script/travis-ci                 XTC_API_TOKEN
-# script/travis-ci                 XTC_DEVICE_SET - passed to test-cloud submit job
+# script/travis-ci                 XTC_DEVICE_SET
 env:
   global:
-  - XTC_DEVICE_SET=aa59649c
   - secure: vpssmPm8t01r1fVU3yMVoDnSEuZnmMpTEIwTz2KO/tfWZIuIW2dL4PqBywlg98cEUEQrmfvt0R7TAPVYOhZF9+qVCYlp+pyYfyS5cnSwVdq+veWlszVAMn5YARUnBsBL63vIaRtdHHfktIXS1CSCdWRLPXIp4uQ2h4HnKtlCICs=
+  - secure: x43BbGPq1YvZ35aJrKn3UqmxOvn6Ra9S0LH0I9QDHPETGmT6ngyP2RpoLyof6Xo1g0s0NvVwsIDgP8Vse+vYYmS+IN4xxcvuQd6ONyyxepBylWqsH4bRXSbsPuqj2eZ0GL3UcdJrkQlZswnf1SAdCFaEr0opdWbJt3npZqmRBUA=
