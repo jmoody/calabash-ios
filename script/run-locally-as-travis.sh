@@ -5,7 +5,7 @@
 
 export TRAVIS=1
 
-./script/rspec-ci
-./script/unit-ci
-./script/cucumber-ci
+#./script/rspec-ci
+#./script/unit-ci
+#./script/cucumber-ci
 ./script/xtc-submit-ci

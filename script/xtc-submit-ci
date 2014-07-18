@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+CALABASH_REPO_PATH="${PWD}"
+
 cd calabash-cucumber
 
 RETVAL=$?
@@ -29,13 +31,15 @@ else
     echo "INFO: bundled"
 fi
 
-if [ -z $TRAVIS ]; then
-    bundle exec rake install
-    RETVAL=$?
-else
-    rake install
-    RETVAL=$?
-fi
+#if [ -z $TRAVIS ]; then
+#    bundle exec rake install
+#    RETVAL=$?
+#else
+#    rake install
+#    RETVAL=$?
+#fi
+
+bundle exec rake install
 
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed to calabash-cucumber gem"
@@ -48,6 +52,11 @@ if [ -z $CALABASH_VERSION ]; then
     exit 1
 fi
 
+#if [ $TRAVIS -a $CI ]; then
+#    bundle config local.calabash-cucumber ${CALABASH_REPO_PATH}
+#    bundle config disable_local_branch_check true
+#fi
+
 cd test/cucumber
 rm -rf Gemfile
 rm -rf Gemfile.lock
@@ -56,7 +65,12 @@ rm -rf vendor
 
 echo $CALABASH_VERSION
 echo "source 'http://rubygems.org'" > Gemfile
-echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
+
+#if [ $TRAVIS -a $CI ]; then
+#    echo "gem 'calabash-cucumber', :github => 'calabash/calabash-cucumber', :branch => 'master'" >> Gemfile
+#else
+    echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
+#fi
 
 gem install --no-document xamarin-test-cloud
 test-cloud submit \
