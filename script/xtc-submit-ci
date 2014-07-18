@@ -24,7 +24,7 @@ rm calabash.framework
 
 rm -rf *.gem
 gem build calabash-cucumber.gemspec
-gem install *.gem
+gem install *.gem --no-document
 
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed to calabash-cucumber gem"
