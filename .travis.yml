@@ -1,19 +1,19 @@
 language: objective-c
 
 script:
-#  - script/rspec-ci
-#  - script/unit-ci
-#  - script/cucumber-ci
+  - script/rspec-ci
+  - script/unit-ci
+  - script/cucumber-ci
   - script/xtc-submit-ci
 
 rvm:
-- 1.9.3
-- 2.1.0
-- 2.1.1
+  - 1.9.3
+  - 2.1.0
+  - 2.1.1
 
 # secure
-# script/travis-ci                 XTC_API_TOKEN
-# script/travis-ci                 XTC_DEVICE_SET
+# script/xtc-submit-ci                 XTC_API_TOKEN
+# script/xtc-submit-ci                 XTC_DEVICE_SET
 env:
   global:
   - secure: vpssmPm8t01r1fVU3yMVoDnSEuZnmMpTEIwTz2KO/tfWZIuIW2dL4PqBywlg98cEUEQrmfvt0R7TAPVYOhZF9+qVCYlp+pyYfyS5cnSwVdq+veWlszVAMn5YARUnBsBL63vIaRtdHHfktIXS1CSCdWRLPXIp4uQ2h4HnKtlCICs=
