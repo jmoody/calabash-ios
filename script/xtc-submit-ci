@@ -67,12 +67,18 @@ rm -rf vendor
 echo $CALABASH_VERSION
 echo "source 'http://rubygems.org'" > Gemfile
 
+
+
 # this is really and truly travis-ci and not the local env
 if [ ! -z $HAS_JOSH_K_SEAL_OF_APPROVAL ]; then
-    echo "gem 'calabash-cucumber', :github => 'jmoody/calabash-cucumber'" >> Gemfile
+    git_url=`git config --get remote.origin.url | cut -d ":" -f 2 | cut -d "." -f 1`
+    git_branch=`git rev-parse --abbrev-ref HEAD`
+    echo "gem 'calabash-cucumber', :github => '$git_url' :branch => '$git_branch' " >> Gemfile
 else
     echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
 fi
+
+echo "$(cat Gemfile)"
 
 gem install --no-document xamarin-test-cloud
 test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c config/xtc-profiles.yml -p default --series "travis-ci"
