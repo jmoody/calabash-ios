@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-CALABASH_REPO_PATH="${PWD}"
-
 cd calabash-cucumber
 
 RETVAL=$?
@@ -12,22 +10,20 @@ else
     echo "INFO: changed directory to ${PWD}"
 fi
 
-../script/shared-bundler-tasks.sh
+#../script/shared-bundler-tasks.sh
 
-bundle exec rake install
+rake install
 
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed to calabash-cucumber gem"
     exit $RETVAL
 fi
 
-CALABASH_VERSION=`bundle exec calabash-ios version | tr -d '\n'`
+CALABASH_VERSION=`calabash-ios version | tr -d '\n'`
 if [ -z $CALABASH_VERSION ]; then
     echo "FAIL: could not find the calabash-cucumber gem version"
     exit 1
 fi
-
-cp "pkg/$CALABASH_VERSION.gem" test/cucumber/
 
 cd test/cucumber
 rm -rf Gemfile
@@ -35,11 +31,9 @@ rm -rf Gemfile.lock
 rm -rf .bundle
 rm -rf vendor
 
-gem unpack $CALABASH_VERSION.gem --target=vendor/
 
-echo $CALABASH_VERSION
 echo "source 'http://rubygems.org'" > Gemfile
-echo "gem 'calabash-cucumber', :path => 'vendor/$CALABASH_VERSION'" >> Gemfile
+echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
 
 echo "Wrote Gemfile as:"
 echo "$(cat Gemfile)"
