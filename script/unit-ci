@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+
+cd calabash-cucumber
+
+export CALABASH_GEMSPEC_PATH="${PWD}"
+
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed to change directory to calabash-cucumber - should called as 'script/ci'"
+    exit $RETVAL
+else
+    echo "INFO: changed directory to ${PWD}"
+fi
+
+# Enable binaries to be installed.
+#
+# calabash-cucumber at /Users/travis/build/calabash/calabash-ios/calabash-cucumber did not have a valid gemspec.
+# This prevents bundler from installing bins or native extensions, but that may not affect its functionality.
+# The validation message from Rubygems was:
+#  ["staticlib/calabash.framework.zip"] are not files
+touch calabash.framework
+zip -r calabash.framework.zip calabash.framework
+mkdir -p staticlib
+mv calabash.framework.zip staticlib/
+rm calabash.framework
+
+gem install --no-document bundler
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed to install bundler"
+    exit $RETVAL
+else
+    echo "INFO: installed bundler"
+fi
+
+bundle install --deployment
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: failed to bundle install"
+    exit $RETVAL
+else
+    echo "INFO: bundled"
+fi
+
+bundle exec ruby lib/calabash-cucumber/version.rb
+RETVAL=$?
+if [ $RETVAL != 0 ]; then
+    echo "FAIL: lib/calabash-cucumber/version.rb unit tests"
+    exit $RETVAL
+else
+    echo "INFO: lib/calabash-cucumber/version.rb unit tests passed"
+fi
+
+# unit tests
+# ruby lib/calabash-cucumber/version.rb
+#RETVAL=$?
+#if [ $RETVAL != 0 ]; then
+#    echo "FAIL: failed unit tests"
+#    exit $RETVAL
+#else
+#    echo "INFO: passed unit tests"
+#fi
+
+# on-simulator tests of features in test/cucumber
+# cd test/cucumber
+# rm -rf Gemfile
+# rm -rf Gemfile.lock
+# rm -rf .bundle
+# rm -rf vendor
+# bundle install --deployment
+
+# # remove any stale targets
+# bundle exec calabash-ios sim reset
+
+# # Disable exiting on error so script continues if tests fail
+# set +o errexit
+
+# export APP_BUNDLE_PATH="./LPSimpleExample-cal.app"
+
+# RETVAL=0
+
+# bundle exec cucumber -p sim61_4in $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+
+# bundle exec cucumber -p sim71_4in $CUCUMBER_ARGS
+#  RETVAL=$(($RETVAL+$?))
+
+# # Will not pass on travis although a similar rspec test does.
+# # Instead we run on the 4in 7.0 64 bit simulator.
+# if [ -z $TRAVIS ]; then
+#     bundle exec cucumber -p sim71_64b $CUCUMBER_ARGS
+#     RETVAL=$(($RETVAL+$?))
+# else
+#     # bundle exec cucumber -p sim71_64b $CUCUMBER_ARGS
+#     # EXPECT_FAIL=$?
+#     # if [ $EXPECT_FAIL = 0 ]; then
+#     #     echo "FAIL: expected iPhone iOS 7.1 64b to fail"
+#     #     exit $EXPECT_FAIL
+#     # fi
+#     bundle exec cucumber -p sim70_64b $CUCUMBER_ARGS
+#     RETVAL=$(($RETVAL+$?))
+# fi
+
+# bundle exec cucumber -p sim61r $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+# bundle exec cucumber -p sim71r $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+
+# bundle exec cucumber -p sim61_ipad_r $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+# bundle exec cucumber -p sim71_ipad_r $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+
+# if [ -z $TRAVIS ]; then
+#     bundle exec cucumber -p sim71_ipad_r_64b $CUCUMBER_ARGS
+#     RETVAL=$(($RETVAL+$?))
+# else
+#     # bundle exec cucumber -p sim71_ipad_r_64b $CUCUMBER_ARGS
+#     # EXPECT_FAIL=$?
+#     # if [ $EXPECT_FAIL = 0 ]; then
+#     #     echo "FAIL: expected iPad iOS 7.1 64b to fail"
+#     #     exit $EXPECT_FAIL
+#     # fi
+#     bundle exec cucumber -p sim70_ipad_r_64b $CUCUMBER_ARGS
+#     RETVAL=$(($RETVAL+$?))
+# fi
+
+# bundle exec cucumber -p sim61_sl $CUCUMBER_ARGS
+# RETVAL=$(($RETVAL+$?))
+
+# set -o errexit
+
+# if [ $RETVAL != 0 ]; then
+#     echo "FAIL: failed $RETVAL out of 9 simulators"
+#     exit $RETVAL
+# fi
+
+#echo "source 'http://rubygems.org'" > Gemfile
+#echo "gem 'calabash-cucumber', :path => '${CALABASH_GEMSPEC_PATH}'" >> Gemfile
+#bundle install
+#bundle exec test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c config/xtc-profiles.yml -p default
+#test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c config/xtc-profiles.yml -p default
+
+# RETVAL=$?
+# if [ $RETVAL != 0 ]; then
+#     echo "FAIL: XTC job failed."
+# fi
+
+exit $RETVAL

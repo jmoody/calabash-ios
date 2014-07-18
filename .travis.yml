@@ -2,6 +2,7 @@ language: objective-c
 
 script:
   - script/rspec-ci
+  - script/unit-ci
   - script/travis-ci
 
 rvm:
