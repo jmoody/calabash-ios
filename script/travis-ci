@@ -53,14 +53,14 @@ else
 fi
 
 # unit tests
-ruby lib/calabash-cucumber/version.rb
-RETVAL=$?
-if [ $RETVAL != 0 ]; then
-    echo "FAIL: failed unit tests"
-    exit $RETVAL
-else
-    echo "INFO: passed unit tests"
-fi
+# ruby lib/calabash-cucumber/version.rb
+#RETVAL=$?
+#if [ $RETVAL != 0 ]; then
+#    echo "FAIL: failed unit tests"
+#    exit $RETVAL
+#else
+#    echo "INFO: passed unit tests"
+#fi
 
 # # on-simulator tests of features in test/cucumber
 cd test/cucumber
