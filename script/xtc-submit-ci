@@ -52,10 +52,11 @@ if [ -z $CALABASH_VERSION ]; then
     exit 1
 fi
 
-#if [ $TRAVIS -a $CI ]; then
-#    bundle config local.calabash-cucumber ${CALABASH_REPO_PATH}
-#    bundle config disable_local_branch_check true
-#fi
+# this is really and truly travis-ci and not the local env
+if [ ! -z $HAS_JOSH_K_SEAL_OF_APPROVAL ]; then
+    bundle config local.calabash-cucumber ${CALABASH_REPO_PATH}
+    bundle config disable_local_branch_check true
+fi
 
 cd test/cucumber
 rm -rf Gemfile
@@ -66,20 +67,15 @@ rm -rf vendor
 echo $CALABASH_VERSION
 echo "source 'http://rubygems.org'" > Gemfile
 
-#if [ $TRAVIS -a $CI ]; then
-#    echo "gem 'calabash-cucumber', :github => 'calabash/calabash-cucumber', :branch => 'master'" >> Gemfile
-#else
+# this is really and truly travis-ci and not the local env
+if [ ! -z $HAS_JOSH_K_SEAL_OF_APPROVAL ]; then
+    echo "gem 'calabash-cucumber', :github => 'calabash/calabash-cucumber', :branch => 'master'" >> Gemfile
+else
     echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
-#fi
+fi
 
 gem install --no-document xamarin-test-cloud
-test-cloud submit \
-    LPSimpleExample-cal.ipa \
-    ${XTC_API_TOKEN} \
-    -d ${XTC_DEVICE_SET} \
-    -c config/xtc-profiles.yml \
-    -p default \
-    --series "travis-ci"
+test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c config/xtc-profiles.yml -p default --series "travis-ci"
 
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
