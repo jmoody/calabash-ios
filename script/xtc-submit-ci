@@ -14,31 +14,6 @@ fi
 
 ../script/shared-bundler-tasks.sh
 
-rm -rf .bundle
-rm -rf vendor
-
-if [ -z $TRAVIS ]; then
-    bundle install --no-deployment
-else
-    bundle install --deployment
-fi
-
-RETVAL=$?
-if [ $RETVAL != 0 ]; then
-    echo "FAIL: failed to bundle install"
-    exit $RETVAL
-else
-    echo "INFO: bundled"
-fi
-
-#if [ -z $TRAVIS ]; then
-#    bundle exec rake install
-#    RETVAL=$?
-#else
-#    rake install
-#    RETVAL=$?
-#fi
-
 bundle exec rake install
 
 if [ $RETVAL != 0 ]; then
@@ -52,11 +27,7 @@ if [ -z $CALABASH_VERSION ]; then
     exit 1
 fi
 
-# this is really and truly travis-ci and not the local env
-if [ ! -z $HAS_JOSH_K_SEAL_OF_APPROVAL ]; then
-    bundle config local.calabash-cucumber ${CALABASH_REPO_PATH}
-    bundle config disable_local_branch_check true
-fi
+cp "pkg/$CALABASH_VERSION.gem" test/cucumber/
 
 cd test/cucumber
 rm -rf Gemfile
@@ -64,21 +35,15 @@ rm -rf Gemfile.lock
 rm -rf .bundle
 rm -rf vendor
 
+gem unpack $CALABASH_VERSION.gem --target=vendor/
+
 echo $CALABASH_VERSION
 echo "source 'http://rubygems.org'" > Gemfile
+echo "gem 'calabash-cucumber', :path => 'vendor/$CALABASH_VERSION'" >> Gemfile
 
-
-
-# this is really and truly travis-ci and not the local env
-if [ ! -z $HAS_JOSH_K_SEAL_OF_APPROVAL ]; then
-    git_url=`git config --get remote.origin.url | cut -d ":" -f 2 | cut -d "." -f 1`
-    git_branch=`git rev-parse --abbrev-ref HEAD`
-    echo "gem 'calabash-cucumber', :github => '$git_url' :branch => '$git_branch' " >> Gemfile
-else
-    echo "gem 'calabash-cucumber', '$CALABASH_VERSION'" >> Gemfile
-fi
-
+echo "Wrote Gemfile as:"
 echo "$(cat Gemfile)"
+echo ""
 
 gem install --no-document xamarin-test-cloud
 test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d ${XTC_DEVICE_SET} -c config/xtc-profiles.yml -p default --series "travis-ci"
