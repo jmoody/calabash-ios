@@ -10,7 +10,7 @@ else
     echo "INFO: changed directory to ${PWD}"
 fi
 
-#../script/shared-bundler-tasks.sh
+../script/shared-bundler-tasks.sh
 
 rake install
 
