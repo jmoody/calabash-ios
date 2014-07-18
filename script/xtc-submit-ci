@@ -42,12 +42,10 @@ if [ $RETVAL != 0 ]; then
     exit $RETVAL
 fi
 
-if [ -z $TRAVIS ]; then
-    CALABASH_VERSION=`bundle exec calabash-ios version | tr -d '\n'`
-    echo "installed calabash version: $CALABASH_VERSION"
-else
-    CALABASH_VERSION=`calabash-ios version | tr -d '\n'`
-    echo "installed calabash version: $CALABASH_VERSION"
+CALABASH_VERSION=`bundle exec calabash-ios version | tr -d '\n'`
+if [ -z $CALABASH_VERSION ]; then
+    echo "FAIL: could not find the calabash-cucumber gem version"
+    exit 1
 fi
 
 cd test/cucumber
