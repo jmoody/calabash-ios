@@ -10,7 +10,7 @@ else
     echo "INFO: changed directory to ${PWD}"
 fi
 
-./shared-bundler-tasks.sh
+../script/shared-bundler-tasks.sh
 
 # on-simulator tests of features in test/cucumber
 cd test/cucumber

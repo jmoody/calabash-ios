@@ -10,7 +10,7 @@ else
     echo "INFO: changed directory to ${PWD}"
 fi
 
-./shared-bundler-tasks.sh
+../script/shared-bundler-tasks.sh
 
 rm -rf .bundle
 rm -rf vendor
