@@ -4,7 +4,7 @@ script:
   - script/rspec-ci
   - script/unit-ci
   - script/cucumber-ci
-  - script/travis-ci
+  - script/xtc-submit-ci
 
 rvm:
 - 1.9.3

@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
 
-cd calabash-cucumber
-
-export CALABASH_GEMSPEC_PATH="${PWD}"
-
-RETVAL=$?
-if [ $RETVAL != 0 ]; then
-    echo "FAIL: failed to change directory to calabash-cucumber - should called as 'script/ci'"
-    exit $RETVAL
-else
-    echo "INFO: changed directory to ${PWD}"
-fi
-
 # Enable binaries to be installed.
 #
 # calabash-cucumber at /Users/travis/build/calabash/calabash-ios/calabash-cucumber did not have a valid gemspec.
@@ -41,16 +29,5 @@ if [ $RETVAL != 0 ]; then
 else
     echo "INFO: bundled"
 fi
-
-#echo "source 'http://rubygems.org'" > Gemfile
-#echo "gem 'calabash-cucumber', :path => '${CALABASH_GEMSPEC_PATH}'" >> Gemfile
-#bundle install
-#bundle exec test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c config/xtc-profiles.yml -p default
-#test-cloud submit LPSimpleExample-cal.ipa ${XTC_API_TOKEN} -d aa59649c -c config/xtc-profiles.yml -p default
-
-# RETVAL=$?
-# if [ $RETVAL != 0 ]; then
-#     echo "FAIL: XTC job failed."
-# fi
 
 exit $RETVAL

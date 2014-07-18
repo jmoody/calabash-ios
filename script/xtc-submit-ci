@@ -2,8 +2,6 @@
 
 cd calabash-cucumber
 
-export CALABASH_GEMSPEC_PATH="${PWD}"
-
 RETVAL=$?
 if [ $RETVAL != 0 ]; then
     echo "FAIL: failed to change directory to calabash-cucumber - should called as 'script/ci'"
@@ -12,26 +10,7 @@ else
     echo "INFO: changed directory to ${PWD}"
 fi
 
-# Enable binaries to be installed.
-#
-# calabash-cucumber at /Users/travis/build/calabash/calabash-ios/calabash-cucumber did not have a valid gemspec.
-# This prevents bundler from installing bins or native extensions, but that may not affect its functionality.
-# The validation message from Rubygems was:
-#  ["staticlib/calabash.framework.zip"] are not files
-touch calabash.framework
-zip -r calabash.framework.zip calabash.framework
-mkdir -p staticlib
-mv calabash.framework.zip staticlib/
-rm calabash.framework
-
-gem install --no-document bundler
-RETVAL=$?
-if [ $RETVAL != 0 ]; then
-    echo "FAIL: failed to install bundler"
-    exit $RETVAL
-else
-    echo "INFO: installed bundler"
-fi
+./shared-bundler-tasks.sh
 
 rm -rf .bundle
 rm -rf vendor
@@ -70,7 +49,6 @@ else
     CALABASH_VERSION=`calabash-ios version | tr -d '\n'`
     echo "installed calabash version: $CALABASH_VERSION"
 fi
-
 
 cd test/cucumber
 rm -rf Gemfile
