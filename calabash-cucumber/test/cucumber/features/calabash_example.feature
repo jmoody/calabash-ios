@@ -1,10 +1,8 @@
-
 Feature: to reset or not reset
 
   Background: I should see the first view
     Given I see the first view
 
-  @wip
   @reset_app_before_hook
   Scenario: Use a Before hook to reset the app and then call the device function
     Then I should be able call the device function
