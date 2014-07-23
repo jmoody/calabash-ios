@@ -15,7 +15,6 @@ working_directory = File.expand_path(File.join(File.dirname(__FILE__), '..', 'ca
 
 
 # on-simulator tests of features in test/cucumber
-
 Dir.chdir(working_directory) do
 
   do_system 'rm -rf Gemfile'
@@ -37,20 +36,20 @@ Dir.chdir(working_directory) do
   profiles =
         {:sim61_4in => 'iPhone Retina (4-inch) - Simulator - iOS 6.1',
          :sim71_4in => 'iPhone Retina (4-inch) - Simulator - iOS 7.1',
-         # :sim61r => 'iPhone Retina (3.5-inch) - Simulator - iOS 6.1',
-         # :sim71r => 'iPhone Retina (3.5-inch) - Simulator - iOS 7.1',
-         # :sim61_ipad_r => 'iPad Retina - Simulator - iOS 6.1',
-         # :sim71_ipad_r => 'iPad Retina - Simulator - iOS 7.1',
+         :sim61r => 'iPhone Retina (3.5-inch) - Simulator - iOS 6.1',
+         :sim71r => 'iPhone Retina (3.5-inch) - Simulator - iOS 7.1',
+         :sim61_ipad_r => 'iPad Retina - Simulator - iOS 6.1',
+         :sim71_ipad_r => 'iPad Retina - Simulator - iOS 7.1',
          :sim61_sl => 'iPhone (3.5-inch) - Simulator - iOS 6.1 (launched with ios-sim)'
         }
 
-  # if travis_ci?
-  #   profiles[:sim70_64b] = 'iPhone Retina (4-inch 64-bit) - Simulator - iOS 7.0'
-  #   profiles[:sim70_ipad_r_64b] = 'iPad Retina (64-bit) - Simulator - iOS 7.0'
-  # else
-  #   profiles[:sim71_64b] = 'iPhone Retina (4-inch 64-bit) - Simulator - iOS 7.1'
-  #   profiles[:sim71_ipad_r_64b] = 'iPad Retina (64-bit) - Simulator - iOS 7.1'
-  # end
+  if travis_ci?
+    profiles[:sim70_64b] = 'iPhone Retina (4-inch 64-bit) - Simulator - iOS 7.0'
+    profiles[:sim70_ipad_r_64b] = 'iPad Retina (64-bit) - Simulator - iOS 7.0'
+  else
+    profiles[:sim71_64b] = 'iPhone Retina (4-inch 64-bit) - Simulator - iOS 7.1'
+    profiles[:sim71_ipad_r_64b] = 'iPad Retina (64-bit) - Simulator - iOS 7.1'
+  end
 
   # noinspection RubyStringKeysInHashInspection
   env_vars = {'APP_BUNDLE_PATH' => './LPSimpleExample-cal.app'}
@@ -61,7 +60,6 @@ Dir.chdir(working_directory) do
 
     exit_code = do_system(cucumber_cmd, {:exit_on_nonzero_status => false,
                                          :env_vars => env_vars})
-    puts "exit code from caller '#{exit_code}'"
     if exit_code == 0
       passed_sims << name
     else
