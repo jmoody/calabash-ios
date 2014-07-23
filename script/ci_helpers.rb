@@ -14,7 +14,10 @@ def log_fail(msg)
 end
 
 def do_system(cmd, opts={})
-  default_opts = {:pass_msg => nil, :fail_msg => nil, :exit_on_nonzero_status => true}
+  default_opts = {:pass_msg => nil,
+                  :fail_msg => nil,
+                  :exit_on_nonzero_status => true,
+                  :env_vars => {}}
   merged_opts = default_opts.merge(opts)
   log_cmd cmd
 
@@ -23,8 +26,10 @@ def do_system(cmd, opts={})
     system 'set +e'
   end
 
-  res = system cmd
+  env_vars = merged_opts[:env_vars]
+  res = system(env_vars, cmd)
   exit_code = $?.exitstatus
+
   if res
     log_pass merged_opts[:pass_msg]
   else

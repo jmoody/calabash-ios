@@ -33,8 +33,7 @@ Dir.chdir(working_directory) do
              :fail_msg => 'could not reset the simulator'})
 
 
-  ENV['APP_BUNDLE_PATH'] ='./LPSimpleExample-cal.app'
-
+  # todo - parse the config/cucumber.yml file for this info
   profiles =
         {:sim61_4in => 'iPhone Retina (4-inch) - Simulator - iOS 6.1',
          :sim71_4in => 'iPhone Retina (4-inch) - Simulator - iOS 7.1',
@@ -53,12 +52,16 @@ Dir.chdir(working_directory) do
   #   profiles[:sim71_ipad_r_64b] = 'iPad Retina (64-bit) - Simulator - iOS 7.1'
   # end
 
-  abp = 'APP_BUNDLE_PATH=./LPSimpleExample-cal.app'
+  # noinspection RubyStringKeysInHashInspection
+  env_vars = {'APP_BUNDLE_PATH' => './LPSimpleExample-cal.app'}
   passed_sims = []
   failed_sims = []
   profiles.each do |profile, name|
-    cucumber_cmd = "#{abp} bundle exec cucumber -p #{profile.to_s} #{cucumber_args}"
-    exit_code = do_system(cucumber_cmd, {:exit_on_nonzero_status => false})
+    cucumber_cmd = "bundle exec cucumber -p #{profile.to_s} #{cucumber_args}"
+
+    exit_code = do_system(cucumber_cmd, {:exit_on_nonzero_status => false,
+                                         :env_vars => env_vars})
+    puts "exit code from caller '#{exit_code}'"
     if exit_code == 0
       passed_sims << name
     else
