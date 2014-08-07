@@ -34,7 +34,6 @@ calabash_gem_dir =  File.expand_path(File.join(File.dirname(__FILE__), '..', '..
 
 Dir.chdir calabash_gem_dir do
 
-  puts "calabash gem dir = '#{calabash_gem_dir}'"
   FileUtils.mkdir_p('.bundle')
 
   File.open('.bundle/config', 'w') do |file|
