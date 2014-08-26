@@ -48,4 +48,7 @@ Dir.chdir working_dir do
   do_system('script/ci/travis/cucumber-dylib-ci.rb',
             {:env_vars => env_vars})
 
+  do_system('script/ci/travis/xtc-submit-ci',
+            {:en_vars => env_vars})
+
 end
