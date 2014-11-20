@@ -50,19 +50,10 @@ module Calabash
         #
         # Travis CI CoreSimulator environment is not stable. :(
         def random_core_simulator(sim_control)
-          if Resources.shared.travis_ci?
-            ios8 = RunLoop::Version.new('8.0')
-            target_simulator = nil
-            sim_control.simulators.each do |device|
-              if device.name == 'iPad Air' and device.version == ios8
-                target_simulator = device
-              end
-            end
-            target_simulator
-          else
-            min_ios_version = RunLoop::Version.new('7.1')
-            sim_control.simulators.delete_if { |device| device.version < min_ios_version }.sample
-          end
+          min_ios_version = RunLoop::Version.new('7.1')
+          sim_control.simulators.select do |device|
+            device.version >= min_ios_version
+          end.sample
         end
 
         # Should be part of run-loop.
