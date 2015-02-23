@@ -14,21 +14,21 @@ script:
   # Skip XTC run on all but 2.1.2 to avoid redundant testing. This is just a
   # smoke test to ensure a job can be validated; the ruby version is immaterial.
   - if [[ ( ! -z $XTC_API_TOKEN && ! -z $XTC_USER && `ruby -e 'print RUBY_VERSION'` == '2.1.2' ) ]]; then script/ci/travis/xtc-submit-ci.rb; fi
-  - script/ci/travis/install-gem-ci.rb
-  - script/ci/travis/rspec-ci.rb
-  - script/ci/travis/cucumber-ci.rb --tags ~@no_ci
-  - script/ci/travis/rake-build-server-ci.rb
+  #- script/ci/travis/install-gem-ci.rb
+  #- script/ci/travis/rspec-ci.rb
+  #- script/ci/travis/cucumber-ci.rb --tags ~@no_ci
+  #- script/ci/travis/rake-build-server-ci.rb
 
 rvm:
-  - 1.9.3
-  - 2.0.0
+  #- 1.9.3
+  #- 2.0.0
   - 2.1.2
 
 notifications:
   email:
     recipients:
-      - joshuajmoody@gmail.com
-      - karl.krukow@xamarin.com
+#      - joshuajmoody@gmail.com
+#      - karl.krukow@xamarin.com
     on_success: change
     on_failure: always
 
